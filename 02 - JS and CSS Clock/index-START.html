@@ -15,7 +15,7 @@
 
     <style>
       html {
-        background: #018ded url(https://unsplash.it/1500/1000?image=881&blur=5);
+        background: #018ded url(https://placekitten.com/1080/960);
         background-size: cover;
         font-family: "helvetica neue";
         text-align: center;
@@ -54,23 +54,25 @@
 
       .hand {
         width: 50%;
-        height: 6px;
+        height: 5px;
         background: black;
         position: absolute;
         top: 50%;
+        right: 50%;
+        transform: rotate(90deg);
         transform-origin: right; /* rotate about far right of object */
-        transition: all 0.06s;
-        transition-timing-function: cubic-bezier(0, 2.6, 0.6, 1);
+        transition: all 0.1s;
+        transition-timing-function: cubic-bezier(0, 2.5, 0.5, 1);
       }
 
       .second-hand {
-        background: red;
-        height: 3px;
+        background: red; /* makes second hand red */
+        height: 3px; /* makes second hand thinner */
       }
 
       .hour-hand {
-        width: 33%;
-        right: 50%;
+        width: 40%; /* makes hour hand shorter */
+        height: 7px; /* makes hour hand thicker */
       }
     </style>
 
@@ -80,34 +82,29 @@
       const minuteHand = document.querySelector(".min-hand");
       const hourHand = document.querySelector(".hour-hand");
 
-      // create new Date object
-      const now = new Date();
-
-      // get current seconds, minutes, and hours from Date object
-      const seconds = now.getSeconds();
-      const minutes = now.getMinutes() + seconds / 60;
-      const hours = now.getHours() + minutes / 60;
-      // const minutes = 59; // use this to test different times
-      // const hours = 12; // use this to test different times
-      console.log("start at", hours, minutes, seconds);
-
-      // calc where each hand should start
-      let secondDegrees = (seconds / 60) * 360 + 90;
-      let minuteDegrees = (minutes / 60) * 360 + 90;
-      let hourDegrees = (hours / 12) * 360 + 90;
-
       function setTime() {
-        // degrees per second for each hand
-        secondDegrees += 360 / 60; // it takes 60 seconds to go 360 degrees
-        minuteDegrees += 360 / 3600; // it takes 1 hour (3600 seconds) to go 360 degrees
-        hourDegrees += 360 / 43200; // it takes 12 hours (43200 seconds) to go 360 degrees
+        // create new Date object
+        const now = new Date();
+
+        // get current seconds, minutes, and hours from Date object
+        // include fractional portions of minutes & hours
+        const secs = now.getSeconds();
+        const mins = now.getMinutes() + secs / 60;
+        const hours = now.getHours() + mins / 60;
+        console.log(Math.floor(hours), Math.floor(mins), secs);
+
+        // calculate where each hand should be
+        const secDegs = (secs / 60) * 360 + 90;
+        const minDegs = (mins / 60) * 360 + 90;
+        const hourDegs = (hours / 12) * 360 + 90;
 
         // move each hand
-        secondHand.style.transform = `rotate(${secondDegrees}deg)`;
-        minuteHand.style.transform = `rotate(${minuteDegrees}deg)`;
-        hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+        secondHand.style.transform = `rotate(${secDegs}deg)`;
+        minuteHand.style.transform = `rotate(${minDegs}deg)`;
+        hourHand.style.transform = `rotate(${hourDegs}deg)`;
       }
 
+      // start clock, tick every second
       const clock = setInterval(setTime, 1000);
     </script>
   </body>
